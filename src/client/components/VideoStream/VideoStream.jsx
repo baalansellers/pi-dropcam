@@ -7,6 +7,9 @@ class VideoStream extends React.Component {
     super(props);
     this.state = { isConnected: false, isPlaying: false };
     this.protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+    this.handleConnectDisconnect = this.handleConnectDisconnect.bind(this);
+    this.handlePlayStopClick = this.handlePlayStopClick.bind(this);
   }
 
   componentDidMount() {
@@ -47,17 +50,17 @@ class VideoStream extends React.Component {
 
     return (
       <div>
-        <canvas
-          ref={canvas => (this.canvas = canvas)}
-          hidden={this.state.isConnected}
-        />
-        <Placeholder
-          style={{ height: 150, width: 150 }}
-          hidden={!this.state.isConnected}
-        >
-          <Placeholder.Image />
-        </Placeholder>
         <Container textAlign="center">
+          <canvas
+            ref={canvas => (this.canvas = canvas)}
+            hidden={!this.state.isConnected}
+          />
+          <Placeholder
+            style={{ height: 150, width: 150 }}
+            hidden={this.state.isConnected}
+          >
+            <Placeholder.Image />
+          </Placeholder>
           <Button
             onClick={this.handlePlayStopClick}
             icon
@@ -75,7 +78,7 @@ class VideoStream extends React.Component {
           >
             <Icon
               name="plug"
-              color={connectDisconnectText === "Connect" ? "red" : "green"}
+              color={connectDisconnectText === "Connect" ? "green" : "red"}
             />
             {connectDisconnectText}
           </Button>
