@@ -1,12 +1,13 @@
 import React from "react";
 import { WSAvcPlayer } from "h264-live-player";
-import { Button, Icon, Container, Placeholder } from "semantic-ui-react";
+import { Button, Icon, Placeholder, Card } from "semantic-ui-react";
 
 class VideoStream extends React.Component {
   constructor(props) {
     super(props);
     this.state = { isConnected: false, isPlaying: false };
     this.protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    this.hostname = window.location.hostname;
 
     this.handleConnectDisconnect = this.handleConnectDisconnect.bind(this);
     this.handlePlayStopClick = this.handlePlayStopClick.bind(this);
@@ -36,7 +37,7 @@ class VideoStream extends React.Component {
       this.wsavc.disconnect();
       this.setState({ isConnected: false, isPlaying: false });
     } else {
-      this.wsavc.connect(this.protocol + "//192.168.1.87:4242/video");
+      this.wsavc.connect(`${this.protocol}//${this.hostname}:4242/video`);
       this.setState({ isConnected: true, isPlaying: true });
     }
   }
@@ -50,39 +51,45 @@ class VideoStream extends React.Component {
 
     return (
       <div>
-        <Container textAlign="center">
-          <canvas
-            ref={canvas => (this.canvas = canvas)}
-            hidden={!this.state.isConnected}
-          />
-          <Placeholder
-            style={{ height: 150, width: 150 }}
-            hidden={this.state.isConnected}
-          >
-            <Placeholder.Image />
-          </Placeholder>
-          <Button
-            onClick={this.handlePlayStopClick}
-            icon
-            labelPosition="left"
-            style={{ marginLeft: "1em" }}
-          >
-            <Icon name={playStopText.toLowerCase()} />
-            {playStopText}
-          </Button>
-          <Button
-            onClick={this.handleConnectDisconnect}
-            icon
-            labelPosition="left"
-            style={{ marginLeft: "1em" }}
-          >
-            <Icon
-              name="plug"
-              color={connectDisconnectText === "Connect" ? "green" : "red"}
-            />
-            {connectDisconnectText}
-          </Button>
-        </Container>
+        <Card.Group>
+          <Card>
+            <Card.Content>
+              <canvas
+                ref={canvas => (this.canvas = canvas)}
+                hidden={!this.state.isConnected}
+              />
+              <Placeholder
+                style={{ height: 150, width: 150 }}
+                hidden={this.state.isConnected}
+              >
+                <Placeholder.Image />
+              </Placeholder>
+            </Card.Content>
+            <Card.Content extra>
+              <Button
+                onClick={this.handlePlayStopClick}
+                icon
+                labelPosition="left"
+                style={{ marginLeft: "1em" }}
+              >
+                <Icon name={playStopText.toLowerCase()} />
+                {playStopText}
+              </Button>
+              <Button
+                onClick={this.handleConnectDisconnect}
+                icon
+                labelPosition="left"
+                style={{ marginLeft: "1em" }}
+              >
+                <Icon
+                  name="plug"
+                  color={connectDisconnectText === "Connect" ? "green" : "red"}
+                />
+                {connectDisconnectText}
+              </Button>
+            </Card.Content>
+          </Card>
+        </Card.Group>
       </div>
     );
   }
