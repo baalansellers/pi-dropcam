@@ -1,25 +1,34 @@
-import express from 'express';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import App from '../client/components/App';
+const express = require("express");
+const raspivid = require("raspivid-stream");
 
 const server = express();
-server.use(express.static('dist'));
+const wss = require("express-ws")(server);
 
-server.get('/', (req, res) => {
-  const initialMarkup = ReactDOMServer.renderToString(<App />);
+server.ws("/video", (ws, req) => {
+  ws.send(
+    JSON.stringify({
+      action: "init",
+      width: "960",
+      height: "540"
+    })
+  );
 
-  res.send(`
-    <html>
-      <head>
-        <title>Sample React App</title>
-      </head>
-      <body>
-        <div id="mountNode">${initialMarkup}</div>
-        <script src="/main.js"></script>
-      </body>
-    </html>
-  `)
+  var stream = raspivid({ rotation: 180 });
+
+  stream.on("data", data => {
+    ws.send(data, { binary: true }, error => {
+      if (error) console.error(error);
+    });
+  });
+
+  ws.on("close", () => {
+    stream.removeAllListeners("data");
+  });
 });
 
-server.listen(4242, () => console.log('Server is running...'));
+server.use(function(err, req, res, next) {
+  console.error(err);
+  next(err);
+});
+
+server.listen(4242, () => console.log("Server is running..."));
