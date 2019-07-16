@@ -52,7 +52,7 @@ class VideoStream extends React.Component {
     return (
       <div>
         <Card.Group>
-          <Card style={{ width: 800 }}>
+          <Card style={{ width: 700 }}>
             <Card.Content textAlign="center">
               <canvas
                 ref={canvas => (this.canvas = canvas)}
@@ -60,7 +60,7 @@ class VideoStream extends React.Component {
                 style={{ margin: "auto" }}
               />
               <Placeholder
-                style={{ height: 394 }}
+                style={{ height: 360 }}
                 hidden={this.state.isConnected}
                 fluid
               >

@@ -8,14 +8,19 @@ server.ws("/video", (ws, req) => {
   ws.send(
     JSON.stringify({
       action: "init",
-      width: "700",
-      height: "394"
+      width: "640",
+      height: "360"
       //width: "960",
       //height: "540"
     })
   );
 
-  var stream = raspivid({ rotation: 180 });
+  const opts = {
+    rotation: 0,
+    width: 640,
+    height: 360
+  }
+  var stream = raspivid(opts);
 
   stream.on("data", data => {
     ws.send(data, { binary: true }, error => {
@@ -28,7 +33,7 @@ server.ws("/video", (ws, req) => {
   });
 });
 
-server.use(function(err, req, res, next) {
+server.use(function (err, req, res, next) {
   console.error(err);
   next(err);
 });
