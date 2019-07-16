@@ -8,8 +8,10 @@ server.ws("/video", (ws, req) => {
   ws.send(
     JSON.stringify({
       action: "init",
-      width: "960",
-      height: "540"
+      width: "700",
+      height: "394"
+      //width: "960",
+      //height: "540"
     })
   );
 

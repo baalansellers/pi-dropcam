@@ -52,20 +52,22 @@ class VideoStream extends React.Component {
     return (
       <div>
         <Card.Group>
-          <Card>
-            <Card.Content>
+          <Card style={{ width: 800 }}>
+            <Card.Content textAlign="center">
               <canvas
                 ref={canvas => (this.canvas = canvas)}
                 hidden={!this.state.isConnected}
+                style={{ margin: "auto" }}
               />
               <Placeholder
-                style={{ height: 150, width: 150 }}
+                style={{ height: 394 }}
                 hidden={this.state.isConnected}
+                fluid
               >
-                <Placeholder.Image />
+                <Placeholder.Image rectangular />
               </Placeholder>
             </Card.Content>
-            <Card.Content extra>
+            <Card.Content textAlign="center" extra>
               <Button
                 onClick={this.handlePlayStopClick}
                 icon
